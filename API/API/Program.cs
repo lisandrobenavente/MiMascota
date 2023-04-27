@@ -1,6 +1,8 @@
 using API.Infrastructure.Bootstrapping;
 using API.Infrastructure.ExceptionHandling;
 using API.Infrastructure.Extensions;
+using Data.Dapper.Repositories;
+using Data.Dapper.Repositories.Interfaces;
 
 namespace API
 {
@@ -18,6 +20,8 @@ namespace API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            builder.Services.ConfigureDataDependencies();
             builder.Services
                .ConfigureDapper()
                .ConfigureFluentMigrator(Environment.GetEnvironmentVariable("DB_CONNECTION"));

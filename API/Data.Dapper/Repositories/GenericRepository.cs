@@ -11,26 +11,13 @@ namespace Data.Dapper.Repositories
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        private MySqlConnection GetMySqlConnection(bool canBeReadOnly)
+        protected IDbConnection EstablishConnection()
         {
-            var envVarToRetrieve = canBeReadOnly ? "DB_CONNECTION_READONLY" : "DB_CONNECTION";
-            var dbConnectionString = Environment.GetEnvironmentVariable(envVarToRetrieve);
-            return new MySqlConnection(dbConnectionString);
-        }
-
-        protected IDbConnection EstablishConnection(bool canBeReadOnly = false)
-        {
-            var conn = GetMySqlConnection(canBeReadOnly);
-
-            if (!canBeReadOnly)
-            {
-                conn.Open();
-            }
-
+            var conn = DapperContext.CreateConnection();
+            conn.Open();
             return conn;
         }
-
-        public async Task DeleteRowsByDynamicValuesAsync(dynamic item, string? table = null)
+        public async Task DeleteRowsByDynamicValuesAsync(dynamic item, string table = null)
         {
             var sqlBuilder = new SqlBuilder();
             var template = sqlBuilder.AddTemplate($"DELETE FROM {table ?? Table} /**where**/");
@@ -49,16 +36,16 @@ namespace Data.Dapper.Repositories
                     var pluralizer = new Pluralizer();
                     if (pluralizer.IsPlural(prop.Name))
                     {
-                        sqlBuilder.Where($"`{pluralizer.Singularize(prop.Name)}` IN @{prop.Name}");
+                        sqlBuilder.Where($"[{pluralizer.Singularize(prop.Name)}] IN @{prop.Name}");
                     }
                     else
                     {
-                        sqlBuilder.Where($"`{prop.Name}` IN @{prop.Name}");
+                        sqlBuilder.Where($"[{prop.Name}] IN @{prop.Name}");
                     }
                 }
                 else
                 {
-                    sqlBuilder.Where($"`{prop.Name}` = @{prop.Name}");
+                    sqlBuilder.Where($"[{prop.Name}] = @{prop.Name}");
                 }
                 parameters.Add($"@{prop.Name}", thisProp);
             }
@@ -82,7 +69,7 @@ namespace Data.Dapper.Repositories
 
         public async Task<IEnumerable<T>> GetAllAsync()
         {
-            using (var db = EstablishConnection(canBeReadOnly: true))
+            using (var db = EstablishConnection())
             {
                 var rows = await db.GetAllAsync<T>();
                 return rows;
@@ -91,14 +78,14 @@ namespace Data.Dapper.Repositories
 
         public async Task<T> GetAsync(Guid id)
         {
-            using (var db = EstablishConnection(canBeReadOnly: true))
+            using (var db = EstablishConnection())
             {
                 var row = await db.GetAsync<T>(id);
                 return row;
             }
         }
 
-        public async Task<List<TT>> GetFromSql<TT>(string query, object? parameter = null)
+        public async Task<List<TT>> GetFromSql<TT>(string query, object parameter = null)
         {
             using (var db = EstablishConnection())
             {
@@ -115,7 +102,7 @@ namespace Data.Dapper.Repositories
             }
         }
 
-        public List<TT> GetFromSqlNoAsync<TT>(string query, object? parameter = null)
+        public List<TT> GetFromSqlNoAsync<TT>(string query, object parameter = null)
         {
             using (var db = EstablishConnection())
             {
@@ -132,7 +119,7 @@ namespace Data.Dapper.Repositories
             }
         }
 
-        public async Task<T> GetFirstOrDefaultByDynamicAsync(dynamic item, string? table = null)
+        public async Task<T> GetFirstOrDefaultByDynamicAsync(dynamic item, string table = null)
         {
             var sqlBuilder = new SqlBuilder();
             var template = sqlBuilder.AddTemplate($"SELECT * FROM {table ?? Table} /**where**/");
@@ -151,29 +138,56 @@ namespace Data.Dapper.Repositories
                     var pluralizer = new Pluralizer();
                     if (pluralizer.IsPlural(prop.Name))
                     {
-                        sqlBuilder.Where($"`{pluralizer.Singularize(prop.Name)}` IN @{prop.Name}");
+                        sqlBuilder.Where($"[{pluralizer.Singularize(prop.Name)}] IN @{prop.Name}");
                     }
                     else
                     {
-                        sqlBuilder.Where($"`{prop.Name}` IN @{prop.Name}");
+                        sqlBuilder.Where($"[{prop.Name}] IN @{prop.Name}");
                     }
                 }
                 else
                 {
-                    sqlBuilder.Where($"`{prop.Name}` = @{prop.Name}");
+                    sqlBuilder.Where($"[{prop.Name}] = @{prop.Name}");
                 }
                 parameters.Add($"@{prop.Name}", thisProp);
             }
 
-            using (var db = EstablishConnection(canBeReadOnly: true))
+            using (var db = EstablishConnection())
             {
-                var row = await db.QueryFirstOrDefaultAsync<T>(template.RawSql, parameters);
+                try
+                {
+                    var row = await db.QueryFirstOrDefaultAsync<T>(template.RawSql, parameters);
+                    return row;
+                }
+                catch (Exception ex)
+                {
 
-                return row;
+                    throw ex;
+                }
             }
         }
 
-        public async Task<IEnumerable<T>> GetByDynamicAsync(dynamic item, string? table = null)
+        public async Task<int> RowCount(dynamic item, string table = null)
+        {
+            var sqlBuilder = new SqlBuilder();
+            var template = sqlBuilder.AddTemplate($"SELECT count(*) as Rows FROM  {table ?? Table} /**where**/");
+
+            using (var db = EstablishConnection())
+            {
+                try
+                {
+                    var row = await db.ExecuteScalarAsync<int>(template.RawSql);
+                    return row;
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+            }
+        }
+
+        public async Task<IEnumerable<T>> GetByDynamicAsync(dynamic item, string table = null)
         {
             var sqlBuilder = new SqlBuilder();
             var template = sqlBuilder.AddTemplate($"SELECT * FROM {table ?? Table} /**where**/");
@@ -192,23 +206,63 @@ namespace Data.Dapper.Repositories
                     var pluralizer = new Pluralizer();
                     if (pluralizer.IsPlural(prop.Name))
                     {
-                        sqlBuilder.Where($"`{pluralizer.Singularize(prop.Name)}` IN @{prop.Name}");
+                        sqlBuilder.Where($"[{pluralizer.Singularize(prop.Name)}] IN @{prop.Name}");
                     }
                     else
                     {
-                        sqlBuilder.Where($"`{prop.Name}` IN @{prop.Name}");
+                        sqlBuilder.Where($"[{prop.Name}] IN @{prop.Name}");
                     }
                 }
                 else
                 {
-                    sqlBuilder.Where($"`{prop.Name}` = @{prop.Name}");
+                    sqlBuilder.Where($"[{prop.Name}] = @{prop.Name}");
                 }
                 parameters.Add($"@{prop.Name}", thisProp);
             }
 
-            using (var db = EstablishConnection(canBeReadOnly: true))
+            using (var db = EstablishConnection())
             {
-                var rows = await db.QueryAsync<T>(template.RawSql, parameters);
+                return await db.QueryAsync<T>(template.RawSql, parameters);
+            }
+        }
+        public async Task<IEnumerable<T>> GetByDynamicAsync(dynamic item, int pageNumber, int pageSize, string order, string table = null)
+        {
+            int offset = (pageNumber - 1) * pageSize;
+            var sqlBuilder = new SqlBuilder();
+            var template = sqlBuilder.AddTemplate($"SELECT * FROM {table ?? Table} /**where**/");
+            object itemAsObj = item;
+            var dynamicProps = itemAsObj.GetType().GetProperties();
+            var parameters = new DynamicParameters();
+            foreach (var prop in dynamicProps)
+            {
+                var thisProp = prop.GetValue(item);
+                if (thisProp == null)
+                {
+                    continue;
+                }
+                else if (prop.PropertyType != typeof(string) && prop.PropertyType.GetInterfaces().Contains(typeof(IEnumerable)))
+                {
+                    var pluralizer = new Pluralizer();
+                    if (pluralizer.IsPlural(prop.Name))
+                    {
+                        sqlBuilder.Where($"[{pluralizer.Singularize(prop.Name)}] IN @{prop.Name}");
+                    }
+                    else
+                    {
+                        sqlBuilder.Where($"[{prop.Name}] IN @{prop.Name}");
+                    }
+                }
+                else
+                {
+                    sqlBuilder.Where($"[{prop.Name}] = @{prop.Name}");
+                }
+                parameters.Add($"@{prop.Name}", thisProp);
+            }
+
+            string sql = $"{template.RawSql} ORDER BY {order} Limit {offset},{pageSize}";
+            using (var db = EstablishConnection())
+            {
+                var rows = await db.QueryAsync<T>(sql, parameters);
 
                 return rows;
             }
@@ -267,9 +321,10 @@ namespace Data.Dapper.Repositories
                         await db.UpdateAsync<T>(item, trans);
                         trans.Commit();
                     }
-                    catch
+                    catch (Exception e)
                     {
                         trans.Rollback();
+                        throw e;
                     }
                 }
             }
@@ -313,16 +368,16 @@ namespace Data.Dapper.Repositories
                     var pluralizer = new Pluralizer();
                     if (pluralizer.IsPlural(prop.Name))
                     {
-                        sqlBuilder.Where($"`{pluralizer.Singularize(prop.Name)}` IN @{prop.Name}");
+                        sqlBuilder.Where($"[{pluralizer.Singularize(prop.Name)}] IN @{prop.Name}");
                     }
                     else
                     {
-                        sqlBuilder.Where($"`{prop.Name}` IN @{prop.Name}");
+                        sqlBuilder.Where($"[{prop.Name}] IN @{prop.Name}");
                     }
                 }
                 else
                 {
-                    sqlBuilder.Where($"`{prop.Name}` = @{prop.Name}");
+                    sqlBuilder.Where($"[{prop.Name}] = @{prop.Name}");
                 }
                 parameters.Add($"@{prop.Name}", thisProp);
             }
@@ -346,15 +401,13 @@ namespace Data.Dapper.Repositories
 
         public async Task<T> GetAsync(string id)
         {
-            using (var db = EstablishConnection(canBeReadOnly: true))
+            using (var db = EstablishConnection())
             {
                 var row = await db.GetAsync<T>(id);
                 return row;
             }
         }
 
-
-
-        private string? Table => typeof(T).GetCustomAttribute<TableAttribute>(false)?.Name;
+        private string Table => typeof(T).GetCustomAttribute<TableAttribute>(false)?.Name;
     }
 }

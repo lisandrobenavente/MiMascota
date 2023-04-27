@@ -1,7 +1,8 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 using API.Infrastructure.ExceptionHandling.Renderers;
-
+using Data.Dapper.Repositories.Interfaces;
+using Data.Dapper.Repositories;
 
 namespace API.Infrastructure.Bootstrapping
 {
@@ -9,7 +10,7 @@ namespace API.Infrastructure.Bootstrapping
     {
         public static IServiceCollection ConfigureDataDependencies(this IServiceCollection services)
         {
-           
+           services.AddScoped<IUsersRepository, UsersRepository>();
             return services;
         }
 
