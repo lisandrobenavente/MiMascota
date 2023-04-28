@@ -18,7 +18,7 @@ namespace Data.Dapper.Migrations
                 .WithColumn("UserId").AsGuid().NotNullable().ForeignKey("FK_UserProfile_Users_UserId", "Users", "Id")
                 .WithColumn("FirstName").AsString(100).NotNullable()
                 .WithColumn("LastName").AsString(100).NotNullable()
-                .WithColumn("EmailAddress").AsString(255).NotNullable()
+                .WithColumn("EmailAddress").AsString(255).Unique().NotNullable()
                 .WithColumn("Phone").AsString(50).NotNullable()
                 .WithColumn("CreatedDate").AsDateTime().Nullable()
                 .WithColumn("UpdatedDate").AsDateTime().Nullable();

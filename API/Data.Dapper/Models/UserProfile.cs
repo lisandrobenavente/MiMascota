@@ -1,6 +1,8 @@
 ﻿using Dapper.Contrib.Extensions;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using TableAttribute = Dapper.Contrib.Extensions.TableAttribute;
 
 namespace Data.Dapper.Models
 {
@@ -8,7 +10,7 @@ namespace Data.Dapper.Models
     public class UserProfile
     {
         [ExplicitKey]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid Id { get; set; } = Guid.NewGuid();        
         public Guid UserId { get; set; }
         [MaxLength(50)]
         public string FirstName { get; set; }
