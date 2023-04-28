@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Dapper.Contrib.Extensions;
+using System;
 
 namespace Data.Dapper.Models
 {
     [Table("Users")]
     public class UserProfile
     {
-        public Guid Id { get; set; }
+        [ExplicitKey]
+        public Guid Id { get; set; }        
+        public Guid UserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string EmailAddress { get; set; }

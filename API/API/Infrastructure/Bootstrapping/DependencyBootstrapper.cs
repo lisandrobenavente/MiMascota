@@ -11,6 +11,7 @@ namespace API.Infrastructure.Bootstrapping
         public static IServiceCollection ConfigureDataDependencies(this IServiceCollection services)
         {
            services.AddScoped<IUsersRepository, UsersRepository>();
+            services.AddScoped<IUserProfileRepository, UserProfileRepository>();
             return services;
         }
 

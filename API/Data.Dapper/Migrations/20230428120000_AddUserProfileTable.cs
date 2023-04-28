@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Data.Dapper.Migrations
 {
 
-    [Migration(20200707120000)]
+    [Migration(20230428120000)]
     public class _20230428120000_AddUserProfileTable:Migration
     {
         public override void Up()
