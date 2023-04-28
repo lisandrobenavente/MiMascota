@@ -9,7 +9,7 @@ namespace Data.Dapper.Migrations
         {
             Create.Table("Users")
                 .WithColumn("Id").AsGuid().PrimaryKey()
-                .WithColumn("Username").AsString(255).NotNullable()
+                .WithColumn("Username").AsString(255).Unique().NotNullable()
                 .WithColumn("Password").AsString(65535).NotNullable()
                 .WithColumn("CreatedDate").AsDateTime().Nullable()
                 .WithColumn("UpdatedDate").AsDateTime().Nullable();

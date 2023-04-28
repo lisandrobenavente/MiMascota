@@ -36,16 +36,16 @@ namespace Data.Dapper.Repositories
                     var pluralizer = new Pluralizer();
                     if (pluralizer.IsPlural(prop.Name))
                     {
-                        sqlBuilder.Where($"[{pluralizer.Singularize(prop.Name)}] IN @{prop.Name}");
+                        sqlBuilder.Where($"`{pluralizer.Singularize(prop.Name)}` IN @{prop.Name}");
                     }
                     else
                     {
-                        sqlBuilder.Where($"[{prop.Name}] IN @{prop.Name}");
+                        sqlBuilder.Where($"`{prop.Name}` IN @{prop.Name}");
                     }
                 }
                 else
                 {
-                    sqlBuilder.Where($"[{prop.Name}] = @{prop.Name}");
+                    sqlBuilder.Where($"`{prop.Name}` = @{prop.Name}");
                 }
                 parameters.Add($"@{prop.Name}", thisProp);
             }
@@ -59,7 +59,7 @@ namespace Data.Dapper.Repositories
                         await db.ExecuteAsync(template.RawSql, parameters, trans);
                         trans.Commit();
                     }
-                    catch
+                    catch(Exception ex)
                     {
                         trans.Rollback();
                     }
@@ -280,7 +280,7 @@ namespace Data.Dapper.Repositories
                         trans.Commit();
                         return inserted;
                     }
-                    catch
+                    catch(Exception ex) 
                     {
                         trans.Rollback();
                         return -1;

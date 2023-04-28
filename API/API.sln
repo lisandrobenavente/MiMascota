@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "API\API.csproj", "{DDA44E58-85B0-4614-B20A-65FCA2E593B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "API\API.csproj", "{DDA44E58-85B0-4614-B20A-65FCA2E593B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Dapper", "Data.Dapper\Data.Dapper.csproj", "{D49F2959-FDEB-458A-9544-2A19B1A719F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.Dapper", "Data.Dapper\Data.Dapper.csproj", "{D49F2959-FDEB-458A-9544-2A19B1A719F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.Common", "Domain.Common\Domain.Common.csproj", "{B0E9C6D8-6E00-4FAE-A795-D7F78F8CB4C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Common", "Domain.Common\Domain.Common.csproj", "{B0E9C6D8-6E00-4FAE-A795-D7F78F8CB4C6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
