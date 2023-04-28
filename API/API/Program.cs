@@ -1,8 +1,11 @@
 using API.Infrastructure.Bootstrapping;
 using API.Infrastructure.ExceptionHandling;
 using API.Infrastructure.Extensions;
+using API.ViewModels;
+using Data.Dapper.Models;
 using Data.Dapper.Repositories;
 using Data.Dapper.Repositories.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace API
 {
@@ -22,6 +25,7 @@ namespace API
             builder.Services.AddSwaggerGen();
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             builder.Services.ConfigureDataDependencies();
+            ;
             builder.Services
                .ConfigureDapper()
                .ConfigureFluentMigrator(Environment.GetEnvironmentVariable("DB_CONNECTION"));

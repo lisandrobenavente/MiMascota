@@ -29,8 +29,8 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IEnumerable<UserViewModel>> Get()
         {
-            var result = await _usersRepository.GetAllAsync();
-            return _mapper.Map<IEnumerable<UserViewModel>>(result);
+                var result = await _usersRepository.GetAllAsync();
+                return _mapper.Map<IEnumerable<UserViewModel>>(result);          
         }
 
         [Microsoft.AspNetCore.Mvc.HttpGet]
