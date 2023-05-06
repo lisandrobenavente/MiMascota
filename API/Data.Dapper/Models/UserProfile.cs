@@ -2,7 +2,7 @@
 
 namespace Data.Dapper.Models
 {
-    [Table("Users")]
+    [Table("UserProfile")]
     public class UserProfile
     {
         [ExplicitKey]

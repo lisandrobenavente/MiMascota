@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Data.Dapper.Models
 {
+    [Table("UserType")]
     public class UserType
     {
         [ExplicitKey]

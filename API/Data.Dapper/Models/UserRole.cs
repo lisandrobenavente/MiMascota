@@ -7,13 +7,15 @@ using System.Threading.Tasks;
 
 namespace Data.Dapper.Models
 {
-    [Table("Role")]
-    public class Role
+    [Table("UserRole")]
+    public class UserRole
     {
         [ExplicitKey]
         public Guid Id { get; set; } = Guid.NewGuid();
-        public string Name { get; set; }
+        public Guid UserId { get; set; }
+        public Guid userTypeId { get; set; }
+        public Guid roleId { get; set; }
         public DateTime? CreatedDate { get; set; } = DateTime.Now;
-        public DateTime? UpdatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; } = DateTime.Now;
     }
 }
