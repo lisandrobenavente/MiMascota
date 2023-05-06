@@ -10,8 +10,15 @@ namespace API.Infrastructure.Bootstrapping
     {
         public static IServiceCollection ConfigureDataDependencies(this IServiceCollection services)
         {
-           services.AddScoped<IUsersRepository, UsersRepository>();
+            services.AddScoped<IActionsRepository, ActionsRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IServicesRepository, ServicesRepository>();
+            services.AddScoped<IUsersRepository, UsersRepository>();
+            services.AddScoped<IUserPetRepository, UserPetRepository>();
             services.AddScoped<IUserProfileRepository, UserProfileRepository>();
+            services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+            services.AddScoped<IUserTypeRepository, UserTypeRepository>();
+            services.AddScoped<IPetTypeRepository, PetTypeRepository>();
             return services;
         }
 
@@ -32,8 +39,8 @@ namespace API.Infrastructure.Bootstrapping
 
         public static IServiceCollection ConfigureAuxiliaryServices(this IServiceCollection services)
         {
-            
-           // services.AddSingleton<IApiInformationGetter, DefaultApiInformationGetter>();
+
+            // services.AddSingleton<IApiInformationGetter, DefaultApiInformationGetter>();
             return services;
         }
     }

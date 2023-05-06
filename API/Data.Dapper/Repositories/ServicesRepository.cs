@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Data.Dapper.Repositories
 {
-    public class UserProfileRepository : GenericRepository<UserProfile>, IUserProfileRepository
+    public class ServicesRepository : GenericRepository<Services>, IServicesRepository
     {
-        public UserProfileRepository():base()
+        public ServicesRepository():base()
         {
 
         }

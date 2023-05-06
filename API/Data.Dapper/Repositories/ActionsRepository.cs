@@ -8,11 +8,8 @@ using System.Threading.Tasks;
 
 namespace Data.Dapper.Repositories
 {
-    public class UserProfileRepository : GenericRepository<UserProfile>, IUserProfileRepository
+    public class ActionsRepository: GenericRepository<Actions>, IActionsRepository
     {
-        public UserProfileRepository():base()
-        {
-
-        }
+        public ActionsRepository():base() { }
     }
 }
