@@ -9,7 +9,7 @@ namespace Data.Dapper.Migrations
 {
 
     [Migration(20230428120000)]
-    public class _20230428120000_AddUserProfileTable:Migration
+    public class AddUserProfileTable:Migration
     {
         public override void Up()
         {
