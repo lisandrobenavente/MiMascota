@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Data.Dapper.Models
 {
+    [Table("Actions")]
     public class Actions
     {
         [ExplicitKey]

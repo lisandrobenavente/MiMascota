@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Data.Dapper.Models
 {
-    [Table("Role")]
-    public class Role
+    [Table("PetType")]
+    public class PetType
     {
         [ExplicitKey]
         public Guid Id { get; set; } = Guid.NewGuid();
