@@ -10,13 +10,14 @@ namespace API.Infrastructure.Bootstrapping
     {
         public static IServiceCollection ConfigureDataDependencies(this IServiceCollection services)
         {
+            services.AddScoped<IActionsRepository, ActionsRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IServicesRepository, ServicesRepository>();
             services.AddScoped<IUsersRepository, UsersRepository>();
+            services.AddScoped<IUserPetRepository, UserPetRepository>();
             services.AddScoped<IUserProfileRepository, UserProfileRepository>();
             services.AddScoped<IUserRoleRepository, UserRoleRepository>();
-            services.AddScoped<IUserPetRepository, UserPetRepository>();
             services.AddScoped<IUserTypeRepository, UserTypeRepository>();
-            services.AddScoped<IServicesRepository, ServicesRepository>();
-            services.AddScoped<IActionsRepository, ActionsRepository>();
             services.AddScoped<IPetTypeRepository, PetTypeRepository>();
             return services;
         }

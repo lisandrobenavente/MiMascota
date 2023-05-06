@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Data.Dapper.Repositories.Interfaces
 {
-    public interface IUserPetRepository : IGenericRepository<UserPets>
+    public interface IUserPetRepository : IGenericRepository<UserPet>
     {
     }
 }

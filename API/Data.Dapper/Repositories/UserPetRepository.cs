@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Data.Dapper.Repositories
 {
-    public class UserPetRepository : GenericRepository<UserPets>, IUserPetRepository
+    public class UserPetRepository : GenericRepository<UserPet>, IUserPetRepository
     {
         public UserPetRepository():base() { }
     }
